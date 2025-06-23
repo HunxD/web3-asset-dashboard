@@ -32,6 +32,11 @@ async function getTokenPriceBySymbol() {
   return await alchemy.prices.getTokenPriceBySymbol(MAIN_TOKENS);
 }
 
+/**
+ * Get NFTs held by a specific address
+ * @param address The wallet address to query
+ * @returns An array of NFTs owned by the address
+ */
 async function getNftByAddress(address: string) {
   const nftsResult = await alchemy.nft.getNftsForOwner(address);
   const nfts = nftsResult.ownedNfts.slice(0, 12).map((nft) => ({
@@ -50,6 +55,11 @@ async function getNftByAddress(address: string) {
   return nfts;
 }
 
+/**
+ * Get main assets held by a specific address
+ * @param address  The wallet address to query
+ * @returns An object containing the main assets held by the address
+ */
 export async function getMainAssets(address: string) {
   const cacheKey = `account_summary:${address}`;
   const cached = await redis.get(cacheKey);
@@ -100,6 +110,11 @@ export async function getMainAssets(address: string) {
   return summary;
 }
 
+/**
+ * Get query history for a specific address
+ * @param address The wallet address to query
+ * @param snapshot The snapshot of the queried data
+ */
 export async function saveQueryHistory(address: string, snapshot: object) {
   await pool.query(
     "INSERT INTO address_query_history (address, snapshot) VALUES (?, ?)",
